@@ -2,6 +2,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 
 struct SnakeSegment {
@@ -17,6 +18,7 @@ int main() {
 
     const int blockSize = 20;  // Размер блока змейки
     int dx = 1, dy = 0;  // Направление движения
+    int score = 0;
 
     sf::Clock clock;
     float timer = 0, delay = 0.1;
@@ -51,11 +53,28 @@ int main() {
             snake[0].x += dx;
             snake[0].y += dy;
 
+            
+
+            // Проверка на столкновение со стенками
+            if (snake[0].x < 0 || snake[0].x >= 800 / blockSize || snake[0].y < 0 || snake[0].y >= 600 / blockSize) {
+                window.close();
+            }
+
+            // Проверка на столкновение с самой собой
+            for (int i = 1; i < snake.size(); ++i) {
+                if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
+                    window.close();
+                    }
+                }
+
             // Проверка на поедание фрукта
             if (snake[0].x == fruitX && snake[0].y == fruitY) {
-                snake.push_back(SnakeSegment(fruitX, fruitY));
+                // Добавление нового сегмента в хвост змейки
+                snake.push_back(SnakeSegment(snake.back().x, snake.back().y));
                 fruitX = rand() % (800 / blockSize);
                 fruitY = rand() % (600 / blockSize);
+                score++;
+                std::cout << "Score: " << score << std::endl;
             }
         }
 
