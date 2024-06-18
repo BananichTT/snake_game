@@ -2,6 +2,7 @@
 #include <vector>
 
 
+
 struct SnakeSegment {
     int x, y;
     SnakeSegment(int x, int y) : x(x), y(y){}
@@ -13,12 +14,35 @@ int main() {
     std::vector<SnakeSegment> snake;
     snake.push_back(SnakeSegment(5, 5));  // Начальная позиция змейки
     const int blockSize = 20;  // Размер блока змейки
+    int dx = 1, dy = 0;  // Направление движения
+
+    sf::Clock clock;
+    float timer = 0, delay = 0.1;
 
     while (window.isOpen()) {
+        float time = clock.restart().asSeconds();
+        timer += time;
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+        }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { dx = 0; dy = -1; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { dx = 0; dy = 1; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { dx = -1; dy = 0; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { dx = 1; dy = 0; }
+
+        if (timer > delay) {
+            timer = 0;
+
+            for (int i = snake.size() - 1; i > 0; i--) {
+                snake[i].x = snake[i - 1].x;
+                snake[i].y = snake[i - 1].y;
+            }
+            snake[0].x += dx;
+            snake[0].y += dy;
         }
 
         window.clear();
