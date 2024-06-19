@@ -10,9 +10,16 @@ struct SnakeSegment {
     SnakeSegment(int x, int y) : x(x), y(y){}
 };
 
+void runGame(sf::RenderWindow& window);
+void showMainMenu(sf::RenderWindow& window);
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Snake Game");
+    showMainMenu(window);
+    return 0;
+}
 
+void runGame(sf::RenderWindow& window){
     std::vector<SnakeSegment> snake;
     snake.push_back(SnakeSegment(5, 5));  // Начальная позиция змейки
 
@@ -32,7 +39,7 @@ int main() {
     sf::Font font;
     if (!font.loadFromFile("arial.ttf")) {
         std::cerr << "Error loading font\n";
-        return -1;
+        return;
     }
 
     // Настройка текстового объекта для отображения очков
@@ -71,29 +78,29 @@ int main() {
                 snake[i].y = snake[i - 1].y;
             }
             snake[0].x += dx;
-            snake[0].y += dy;
+snake[0].y += dy;
 
-            // Проверка на столкновение со стенками
-            if (snake[0].x < 0 || snake[0].x >= 800 / blockSize || snake[0].y < 0 || snake[0].y >= 600 / blockSize) {
-                window.close();
-            }
+// Проверка на столкновение со стенками
+if (snake[0].x < 0 || snake[0].x >= 800 / blockSize || snake[0].y < 0 || snake[0].y >= 600 / blockSize) {
+    window.close();
+}
 
-            // Проверка на столкновение с самой собой
-            for (int i = 1; i < snake.size(); ++i) {
-                if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
-                    window.close();
-                    }
-                }
+// Проверка на столкновение с самой собой
+for (int i = 1; i < snake.size(); ++i) {
+    if (snake[0].x == snake[i].x && snake[0].y == snake[i].y) {
+        window.close();
+    }
+}
 
-            // Проверка на поедание фрукта
-            if (snake[0].x == fruitX && snake[0].y == fruitY) {
-                // Добавление нового сегмента в хвост змейки
-                snake.push_back(SnakeSegment(snake.back().x, snake.back().y));
-                fruitX = rand() % (800 / blockSize);
-                fruitY = rand() % (600 / blockSize);
-                score ++;
-                std::cout << "Score: " << score << std::endl;
-            }
+// Проверка на поедание фрукта
+if (snake[0].x == fruitX && snake[0].y == fruitY) {
+    // Добавление нового сегмента в хвост змейки
+    snake.push_back(SnakeSegment(snake.back().x, snake.back().y));
+    fruitX = rand() % (800 / blockSize);
+    fruitY = rand() % (600 / blockSize);
+    score++;
+    std::cout << "Score: " << score << std::endl;
+}
         }
 
         window.clear();
@@ -120,6 +127,82 @@ int main() {
 
         window.display();
     }
+}
 
-    return 0;
+void showMainMenu(sf::RenderWindow& window) {
+    // Загрузка шрифта
+    sf::Font font;
+    if (!font.loadFromFile("arial.ttf")) {
+        std::cerr << "Error loading font\n";
+        return;
+    }
+
+    // Настройка текстового объекта для названия игры
+    sf::Text title;
+    title.setFont(font);
+    title.setCharacterSize(48);
+    title.setFillColor(sf::Color::White);
+    title.setString("Snake Game");
+    title.setPosition(250, 100);
+
+    // Настройка кнопок меню
+    sf::Text newGameButton;
+    newGameButton.setFont(font);
+    newGameButton.setCharacterSize(24);
+    newGameButton.setFillColor(sf::Color::White);
+    newGameButton.setString("New Game");
+    newGameButton.setPosition(350, 200);
+
+    sf::Text highScoresButton;
+    highScoresButton.setFont(font);
+    highScoresButton.setCharacterSize(24);
+    highScoresButton.setFillColor(sf::Color::White);
+    highScoresButton.setString("High Scores");
+    highScoresButton.setPosition(350, 250);
+
+    sf::Text exitButton;
+    exitButton.setFont(font);
+    exitButton.setCharacterSize(24);
+    exitButton.setFillColor(sf::Color::White);
+    exitButton.setString("Exit");
+    exitButton.setPosition(350, 300);
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+
+                    if (newGameButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        runGame(window);
+                    }
+
+                    if (highScoresButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        // Заглушка для таблицы рекордов
+                        std::cout << "High Scores button pressed\n";
+                    }
+
+                    if (exitButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                        window.close();
+                    }
+                }
+            }
+        }
+
+        window.clear();
+
+        // Отрисовка элементов меню
+        window.draw(title);
+        window.draw(newGameButton);
+        window.draw(highScoresButton);
+        window.draw(exitButton);
+
+        window.display();
+    }
+
 }
