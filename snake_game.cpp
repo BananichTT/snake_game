@@ -28,6 +28,20 @@ int main() {
     int fruitX = rand() % (800 / blockSize);
     int fruitY = rand() % (600 / blockSize);
 
+    // Загрузка шрифта
+    sf::Font font;
+    if (!font.loadFromFile("arial.ttf")) {
+        std::cerr << "Error loading font\n";
+        return -1;
+    }
+
+    // Настройка текстового объекта для отображения очков
+    sf::Text text;
+    text.setFont(font);
+    text.setCharacterSize(24);
+    text.setFillColor(sf::Color::White);
+    text.setPosition(10, 10);
+
     while (window.isOpen()) {
         float time = clock.restart().asSeconds();
         timer += time;
@@ -38,13 +52,19 @@ int main() {
                 window.close();
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) { dx = 0; dy = -1; }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) { dx = 0; dy = 1; }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { dx = -1; dy = 0; }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { dx = 1; dy = 0; }
+        // Локальные переменные для направления
+        int new_dx = dx, new_dy = dy;
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && dy !=1) { new_dx = 0; new_dy = -1; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && dy != -1) { new_dx = 0; new_dy = 1; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && dx != 1) { new_dx = -1; new_dy = 0; }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && dx != -1) { new_dx = 1; new_dy = 0; }
 
         if (timer > delay) {
             timer = 0;
+
+            dx = new_dx;
+            dy = new_dy;
 
             for (int i = snake.size() - 1; i > 0; i--) {
                 snake[i].x = snake[i - 1].x;
@@ -52,8 +72,6 @@ int main() {
             }
             snake[0].x += dx;
             snake[0].y += dy;
-
-            
 
             // Проверка на столкновение со стенками
             if (snake[0].x < 0 || snake[0].x >= 800 / blockSize || snake[0].y < 0 || snake[0].y >= 600 / blockSize) {
@@ -73,12 +91,15 @@ int main() {
                 snake.push_back(SnakeSegment(snake.back().x, snake.back().y));
                 fruitX = rand() % (800 / blockSize);
                 fruitY = rand() % (600 / blockSize);
-                score++;
+                score ++;
                 std::cout << "Score: " << score << std::endl;
             }
         }
 
         window.clear();
+
+        // Обновление текстового объекта с очками
+        text.setString("Score: " + std::to_string(score));
 
         // Отрисовка змейки
         for (auto& segment : snake) {
@@ -93,6 +114,9 @@ int main() {
         fruit.setFillColor(sf::Color::Red);
         fruit.setPosition(fruitX * blockSize, fruitY * blockSize);
         window.draw(fruit);
+
+        // Отрисовка текста с очками
+        window.draw(text);
 
         window.display();
     }
