@@ -51,7 +51,7 @@ int main() {
 		outputFile.close();
 	}
 
-	return 0;
+	system("pause");
 }
 
 void runGame(sf::RenderWindow& window, std::vector<HighScore>& highScores) {
@@ -72,8 +72,8 @@ void runGame(sf::RenderWindow& window, std::vector<HighScore>& highScores) {
 
 	// Загрузка шрифта
 	sf::Font font;
-	if (!font.loadFromFile("arial.ttf")) {
-		std::cerr << "Error loading font\n";
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+		std::cerr << "Error loading font from arial.ttf\n";
 		return;
 	}
 
@@ -169,8 +169,8 @@ void runGame(sf::RenderWindow& window, std::vector<HighScore>& highScores) {
 void showMainMenu(sf::RenderWindow& window, std::vector<HighScore>& highScores) {
 	// Загрузка шрифта
 	sf::Font font;
-	if (!font.loadFromFile("arial.ttf")) {
-		std::cerr << "Error loading font\n";
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+		std::cerr << "Error loading font from arial.ttf\n";
 		return;
 	}
 
@@ -224,7 +224,6 @@ void showMainMenu(sf::RenderWindow& window, std::vector<HighScore>& highScores) 
 					}
 
 					if (highScoresButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
-						// Заглушка для таблицы рекордов
 						showHighScores(window, highScores);
 					}
 
@@ -277,8 +276,8 @@ void showMainMenu(sf::RenderWindow& window, std::vector<HighScore>& highScores) 
 void showGameOverScreen(sf::RenderWindow& window, int score, std::vector<HighScore>& highScores) {
 	// Загрузка шрифта
 	sf::Font font;
-	if (!font.loadFromFile("arial.ttf")) {
-		std::cerr << "Error loading font\n";
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+		std::cerr << "Error loading font from arial.ttf\n";
 		return;
 	}
 
@@ -459,8 +458,8 @@ void showGameOverScreen(sf::RenderWindow& window, int score, std::vector<HighSco
 void showHighScores(sf::RenderWindow& window, const std::vector<HighScore>& highScores) {
 	// Загрузка шрифта
 	sf::Font font;
-	if (!font.loadFromFile("arial.ttf")) {
-		std::cerr << "Error loading font\n";
+	if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf")) {
+		std::cerr << "Error loading font from arial.ttf\n";
 		return;
 	}
 
